@@ -1,0 +1,82 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Architecture and Core Rules Guide
+
+This document is a guide to help the AI assistant understand a project's codebase and write consistent code. Consider yourself a new developer joining a project that follows these principles.
+
+## 1. Core Architecture: Layered Architecture
+
+The project strictly separates layers by their roles. All dependencies must always flow inwards: `presentation` -> `service` -> `domain`.
+
+*   **`presentation` (e.g., `.../presentation`)**
+    *   **Role**: The presentation layer is solely responsible for handling web requests and responses. API routing (`Router`), request delegation (`Handler`), and request/response DTOs exclusive to this layer are located here.
+    *   **Dependencies**: It depends **only on the `service` layer.**
+
+*   **`service` (e.g., `.../service`)**
+    *   **Role**: This is the layer that implements **actual business logic.** It orchestrates multiple `domain` components (e.g., Repositories, external service clients) to fulfill a single business requirement. This layer also has its own independent DTO models.
+    *   **Dependencies**: It depends **only on the `domain` layer.**
+
+*   **`domain` (e.g., `.../domain`)**
+    *   **Role**: The purest core of the application. **All specifications (interfaces) for business logic and policies are located here.**
+        *   **Business Data Models**: Defines core business data, such as `Entity`.
+        *   **External Communication Specifications (Ports)**: Defines all **interfaces** and related models for communicating with the outside world, such as database access (`Repository` interface) and external API clients (`XxxClient` interface).
+    *   **Rule**: **Must not have any dependency on frameworks (e.g., Spring) or specific technologies (e.g., JPA, RestClient).**
+
+*   **`infrastructure` (e.g., `.../infrastructure`)**
+    *   **Role**: Provides the **actual implementations (Adapters) for all interfaces (Ports) from the `domain` layer.** It handles all technical details, including database integration (JPA, QueryDSL) and external API clients (RestClient, Feign).
+    *   **Dependencies**: It depends **only on the `domain` layer.**
+
+---
+
+## 2. ✅ DOs (Things You MUST Do)
+
+1.  **Strictly separate and convert DTOs between layers.**
+    *   **This is one of the most critical rules.** Each layer (`presentation`, `service`) must have its own DTOs.
+    *   The `presentation` layer is responsible for converting between `presentation.dto` <-> `service.dto`.
+    *   The `service` layer is responsible for converting between `service.dto` <-> `domain.entity`.
+
+2.  **Always implement business logic in the `service` layer.**
+    *   The `presentation` layer should only delegate requests to the `service` and return the response.
+    *   Complex logic that orchestrates multiple domains belongs in a `service` class.
+
+3.  **Follow the project's established API style (e.g., Functional Routing).**
+    *   If the project uses Spring WebFlux's functional style, look for existing `*Handler.kt` and `*Router.kt` files for implementation examples.
+
+4.  **Execute blocking I/O operations safely in a reactive environment.**
+    *   If the project is reactive (e.g., using WebFlux), blocking calls (like JPA) must be wrapped in a mechanism that offloads them from the main event loop (e.g., a dedicated `TransactionExecutor` or by using `withContext(Dispatchers.IO)`).
+    *   Apply this pattern in the `service` layer whenever you call blocking repository methods.
+
+5.  **Create `Repository` implementations in the `infrastructure` layer.**
+    *   The actual implementation of a `Repository` interface defined in `domain` should be placed in the `infrastructure` package (e.g., `.../infrastructure/jpa`). Check existing `*RepositoryImpl.kt` files for examples.
+
+6.  **Use `suspend` functions and coroutines for asynchronous code (if applicable).**
+    *   If the project uses Kotlin Coroutines, all async processing functions in `Handler` and `Service` classes should be declared with the `suspend` keyword.
+
+7.  **Manage dependency versions centrally.**
+    *   When adding a new library, check if the project uses a centralized version management file (e.g., in `buildSrc`, a `dependencies.gradle` file, or a TOML version catalog). If so, update it there instead of hardcoding versions in the main build file.
+
+---
+
+## 3. ❌ DON'Ts (Things You MUST NOT Do)
+
+1.  **Do not write business logic in the `presentation` layer.**
+    *   Control flow statements like `if` or `for`, or logic that directly calls multiple repositories, should not be in the `presentation` layer. Its responsibility is delegation.
+
+2.  **Do not pass DTOs or Entities across multiple layer boundaries.**
+    *   The `service` layer must not know about `presentation` DTOs, and the `presentation` layer must not know about `domain` Entities. Always convert data models at each layer boundary.
+
+3.  **Do not put framework code in the `domain` layer.**
+    *   Classes in the `domain` layer must not use Spring annotations like `@Component`. (`@Entity` is generally an exception).
+
+4.  **Do not mix API styles.**
+    *   Follow the project's established API style. If it's functional, don't add annotation-based controllers, and vice-versa.
+
+5.  **Do not call blocking I/O methods directly in a reactive context.**
+    *   In a reactive project, repository methods or other blocking calls **must be wrapped** in a non-blocking mechanism as described in the DOs section.
+
+6.  **Do not let `infrastructure` implementation details leak into the `domain` layer.**
+    *   The `domain` layer must know nothing about specific technologies like QueryDSL, JPA, or RestClient. It should only contain pure interfaces.
+
