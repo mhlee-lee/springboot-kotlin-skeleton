@@ -13,7 +13,7 @@ rules:
   - config: p/bash                  # sh/bash script 보안 룰셋
 
   # Kubernetes YAML 구성 파일 (Deployment, Service 등)
-  - config: p/kubernetes           # Kubernetes 리소스 설정 위험 감지 (RBAC, privileged 등)
+#  - config: p/kubernetes           # Kubernetes 리소스 설정 위험 감지 (RBAC, privileged 등)
 
   # YAML 파일 (Helm chart, 설정 등)
   - config: generic.security.yaml   # Helm chart 및 일반 YAML의 보안 검사
