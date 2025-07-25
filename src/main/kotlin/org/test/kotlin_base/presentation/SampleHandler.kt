@@ -21,6 +21,9 @@ class SampleHandler(private val sampleRepository: SampleRepository, private val 
             sampleRepository.findAll()
         }
 
+        val password = "superSecret123!"
+        val apiKey = "sk-1234-abcd"
+
         log.info("value1: ${value1.toJson()}")
         log.info("value2: ${value2.toJson()}")
 
