@@ -1,0 +1,23 @@
+# .github/workflows/semgrep.yml
+name: Semgrep CI
+on:
+  push:
+    branches: [ "main", "master" ] # 기본 브랜치 이름에 맞게 수정하세요.
+  pull_request:
+  workflow_dispatch:
+jobs:
+  semgrep:
+    name: Scan
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      # 1. 코드 체크아웃
+      - uses: actions/checkout@v4
+
+      # 2. Semgrep 스캔 실행
+      - run: semgrep ci
+        env:
+          # 이 시크릿은 Semgrep AppSec Platform에서 자동으로 관리됩니다.
+          # 직접 설정할 필요 없이 Semgrep 봇이 앱 설치 시 자동으로 생성합니다.
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
