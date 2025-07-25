@@ -31,7 +31,7 @@ jobs:
           pip install semgrep
 
       - name: Run Semgrep with SARIF output
-        run: semgrep scan --config=auto --sarif --output=semgrep.sarif
+        run: semgrep scan --config=.github/.semgrep.yml --sarif --output=semgrep.sarif
 
       - name: Upload Semgrep SARIF results
         uses: github/codeql-action/upload-sarif@v3
