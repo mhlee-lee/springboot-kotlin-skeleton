@@ -13,11 +13,23 @@ jobs:
       image: semgrep/semgrep
     steps:
       # 1. 코드 체크아웃
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # 2. Semgrep 스캔 실행
-      - run: semgrep ci
-        env:
-          # 이 시크릿은 Semgrep AppSec Platform에서 자동으로 관리됩니다.
-          # 직접 설정할 필요 없이 Semgrep 봇이 앱 설치 시 자동으로 생성합니다.
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      # 2. Semgrep 액션 실행 및 SARIF 파일 생성
+      # Semgrep의 공식 규칙 세트(r/ci)를 사용하여 스캔하고 결과를 'semgrep.sarif' 파일로 저장
+      - name: Run Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          # 스캔 결과를 SARIF 형식의 파일로 출력하도록 지정
+          sarif_file: semgrep.sarif
+
+      # 3. SARIF 파일을 GitHub Security 탭에 업로드
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          # 업로드할 SARIF 파일의 경로 지정
+          sarif_file: semgrep.sarif
+        # 에러가 발생해도 워크플로우가 중단되지 않도록 설정 (선택 사항)
+        if: always()
+
