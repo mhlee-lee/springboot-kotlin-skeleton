@@ -5,31 +5,36 @@ on:
     branches: [ "main", "master" ] # 기본 브랜치 이름에 맞게 수정하세요.
   pull_request:
   workflow_dispatch:
+
 jobs:
   semgrep:
-    name: Scan
+    name: Run Semgrep
     runs-on: ubuntu-latest
-    container:
-      image: semgrep/semgrep
+
+    permissions:
+      security-events: write  # 보안 경고 업로드 권한
+      actions: read
+      contents: read
+
     steps:
-      # 1. 코드 체크아웃
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Semgrep 액션 실행 및 SARIF 파일 생성
-      # Semgrep의 공식 규칙 세트(r/ci)를 사용하여 스캔하고 결과를 'semgrep.sarif' 파일로 저장
-      - name: Run Semgrep
-        uses: semgrep/semgrep-action@v1
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          # 스캔 결과를 SARIF 형식의 파일로 출력하도록 지정
-          sarif_file: semgrep.sarif
+          python-version: '3.x'
 
-      # 3. SARIF 파일을 GitHub Security 탭에 업로드
-      - name: Upload SARIF file
+      - name: Install Semgrep
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+
+      - name: Run Semgrep with SARIF output
+        run: semgrep scan --config=auto --sarif --output=semgrep.sarif
+
+      - name: Upload Semgrep SARIF results
         uses: github/codeql-action/upload-sarif@v3
         with:
-          # 업로드할 SARIF 파일의 경로 지정
           sarif_file: semgrep.sarif
-        # 에러가 발생해도 워크플로우가 중단되지 않도록 설정 (선택 사항)
-        if: always()
 
