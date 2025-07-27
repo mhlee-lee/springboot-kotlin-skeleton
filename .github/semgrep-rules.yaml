@@ -1,0 +1,14 @@
+rules:
+  - id: hardcoded-password
+    languages: [kotlin]
+    message: "Hard-coded password detected"
+    severity: ERROR
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $VAR = "..."
+          - pattern: |
+              $VAR = '...'
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: (?i)(password|pass|pw|pwd|api.?key|token|secret)
