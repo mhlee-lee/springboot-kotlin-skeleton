@@ -38,7 +38,8 @@ jobs:
             --config=p/security-audit \
             --config=p/docker \
             --config=p/docker-compose \
-            --config=p/kubernetes
+            --config=p/kubernetes \
+            --config=.github/semgrep-rules.yaml
 
 
       # SARIF 결과를 GitHub Security 탭에 업로드
