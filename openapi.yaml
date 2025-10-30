@@ -1,0 +1,1370 @@
+openapi: 3.0.1
+info:
+  title: My API
+  description: My API description
+  version: 0.1.0
+servers:
+- url: http://localhost:18080
+tags: []
+paths:
+  /v1/cgw:
+    post:
+      tags:
+      - "[CGW]"
+      summary: CGW 생성
+      description: CGW 생성
+      operationId: CREATE_CGW
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-cgw871491489"
+            examples:
+              CREATE_CGW:
+                value: "{\"deviceIds\":[\"CGW01\",\"CGW02\"],\"customerName\":\"P_0000001\"\
+                  ,\"vrfDescription\":\"DMZ\",\"rt\":10000,\"vlanId\":100,\"interfaces\"\
+                  :[{\"interfaceType\":\"FW\",\"interfaceName\":\"Bundle-Ether11\"\
+                  ,\"ipAddress\":\"192.168.122.1\",\"netmask\":\"255.255.255.252\"\
+                  },{\"interfaceType\":\"VM\",\"interfaceName\":\"Bundle-Ether111\"\
+                  ,\"ipAddress\":\"172.168.0.1\",\"netmask\":\"255.255.255.0\"}],\"\
+                  nexthop\":\"192.168.122.2\"}"
+      responses:
+        "202":
+          description: "202"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-cgw1617930617"
+              examples:
+                CREATE_CGW:
+                  value: "{\"vrfId\":\"CGW_ID\"}"
+  /v1/cgw/{vrfId}:
+    get:
+      tags:
+      - "[CGW]"
+      summary: CGW 조회 API
+      description: CGW 조회 API
+      operationId: GET_CGW
+      parameters:
+      - name: vrfId
+        in: path
+        description: CGW VRF ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-cgw-vrfId1430899457"
+              examples:
+                GET_CGW:
+                  value: "{\"vrfId\":\"CGW_1\",\"deviceIds\":[\"CGW01\",\"CGW02\"\
+                    ],\"vrfName\":\"P_0000001_65001:10000\",\"rt\":10000,\"interfaces\"\
+                    :[{\"interfaceType\":\"FW\",\"interfaceName\":\"Bundle-Ether11.100\"\
+                    ,\"ipAddress\":\"192.168.122.154\",\"netmask\":\"255.255.255.252\"\
+                    },{\"interfaceType\":\"VM\",\"interfaceName\":\"Bundle-Ether111.100\"\
+                    ,\"ipAddress\":\"172.168.0.0\",\"netmask\":\"255.255.255.0\"}],\"\
+                    nexthop\":\"192.168.122.153\"}"
+    delete:
+      tags:
+      - "[CGW]"
+      summary: CGW 삭제
+      description: CGW 삭제
+      operationId: DELETE_CGW
+      parameters:
+      - name: vrfId
+        in: path
+        description: CGW VRF ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "202":
+          description: "202"
+  /v1/epc/vrf:
+    post:
+      tags:
+      - "[EPC]"
+      summary: CONNECTHUB 생성 API
+      description: CONNECTHUB 생성 API
+      operationId: CREATE_EPC_CONNECTHUB
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-epc-vrf652634864"
+            examples:
+              CREATE_EPC_CONNECTHUB:
+                value: "{\"deviceIds\":[\"MD4A-E-CHUB-PE-2-12R10\",\"MD4A-E-CHUB-PE-1-12R11\"\
+                  ],\"customerName\":\"TEST_VRF_001\",\"rdRt\":\"65001:21111\",\"\
+                  interfaceType\":\"TEN_GIGABIT_ETHERNET\",\"interfacePort\":\"0/1/2\"\
+                  ,\"vlanId\":3535,\"interfaceIps\":[{\"ipAddress\":\"10.10.1.2\"\
+                  ,\"netmask\":\"255.255.255.248\"},{\"ipAddress\":\"10.10.1.3\",\"\
+                  netmask\":\"255.255.255.248\"}],\"virtualIp\":\"10.10.1.1\",\"qosType\"\
+                  :\"DEDI\",\"qosBandwidth\":\"50Mbps\",\"routeInfo\":{\"routes\"\
+                  :[{\"destIpAddress\":\"172.16.1.0\",\"netmask\":\"255.255.255.0\"\
+                  },{\"destIpAddress\":\"172.16.2.0\",\"netmask\":\"255.255.255.0\"\
+                  }],\"nextHop\":\"10.10.1.4\"}}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-ipc-vrf-317327774"
+              examples:
+                CREATE_EPC_CONNECTHUB:
+                  value: "{\"vrfId\":\"VRF_ID\"}"
+  /v1/ipc/vrf:
+    post:
+      tags:
+      - "[IPC]"
+      summary: CONNECTHUB 생성 API
+      description: CONNECTHUB 생성 API
+      operationId: CREATE_IPC_CONNECTHUB
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-ipc-vrf2147366891"
+            examples:
+              CREATE_IPC_CONNECTHUB:
+                value: "{\"deviceIds\":[\"MD4A-E-CHUB-PE-2-12R10\",\"MD4A-E-CHUB-PE-1-12R11\"\
+                  ],\"customerName\":\"TEST_VRF_001\",\"interfaceType\":\"TEN_GIGABIT_ETHERNET\"\
+                  ,\"interfacePort\":\"0/1/2\",\"vlanId\":3535,\"interfaceIps\":[{\"\
+                  ipAddress\":\"10.10.1.2\",\"netmask\":\"255.255.255.248\"},{\"ipAddress\"\
+                  :\"10.10.1.3\",\"netmask\":\"255.255.255.248\"}],\"virtualIp\":\"\
+                  10.10.1.1\",\"qosType\":\"DEDI\",\"qosBandwidth\":\"50Mbps\",\"\
+                  routeInfo\":{\"routes\":[{\"destIpAddress\":\"172.16.1.0\",\"netmask\"\
+                  :\"255.255.255.0\"},{\"destIpAddress\":\"172.16.2.0\",\"netmask\"\
+                  :\"255.255.255.0\"}],\"nextHop\":\"10.10.1.4\"}}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-ipc-vrf-317327774"
+              examples:
+                CREATE_IPC_CONNECTHUB:
+                  value: "{\"vrfId\":\"VRF_ID\"}"
+  /v1/status/{UUID}:
+    get:
+      tags:
+      - "[ETC]"
+      summary: 비동기 상태 조회 API
+      description: "성공 : COMPLETE, 실패: FAILED"
+      operationId: GET TRANSACTION STATUS
+      parameters:
+      - name: UUID
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-status-UUID486549215"
+              examples:
+                GET TRANSACTION STATUS:
+                  value: "{\"vrfId\":\"VRF_15\",\"status\":\"RUNNING\",\"data\":{}}"
+  /v1/epc/vrf/{vrfId}:
+    get:
+      tags:
+      - "[EPC]"
+      summary: CONNECTHUB 조회 API
+      description: CONNECTHUB 조회 API
+      operationId: GET_EPC_CONNECTHUB
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-epc-vrf-vrfId306422075"
+              examples:
+                GET_EPC_CONNECTHUB:
+                  value: "{\"deviceIds\":[\"MD4A-E-CHUB-PE-2-12R10\",\"MD4A-E-CHUB-PE-1-12R11\"\
+                    ],\"vrfName\":\"TEST_VRF_001\",\"status\":\"COMPLETE\",\"rdRt\"\
+                    :\"65001:21111\",\"interfaceType\":\"TEN_GIGABIT_ETHERNET\",\"\
+                    interfacePort\":\"0/1/2\",\"vlanId\":3535,\"interfaceIps\":[{\"\
+                    ipAddress\":\"10.10.1.2\",\"netmask\":\"255.255.255.248\"},{\"\
+                    ipAddress\":\"10.10.1.3\",\"netmask\":\"255.255.255.248\"}],\"\
+                    virtualIp\":\"10.10.1.1\",\"qosType\":\"DEDI\",\"qosBandwidth\"\
+                    :\"50Mbps\",\"routeInfo\":{\"routes\":[{\"destIpAddress\":\"172.16.1.0\"\
+                    ,\"netmask\":\"255.255.255.0\"},{\"destIpAddress\":\"172.16.2.0\"\
+                    ,\"netmask\":\"255.255.255.0\"}],\"nextHop\":\"10.10.1.4\"}}"
+    delete:
+      tags:
+      - "[EPC]"
+      summary: CONNECTHUB 삭제 API
+      description: ConnectHub 삭제 API
+      operationId: DELETE_EPC_CONNECTHUB
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/ipc/vrf/{vrfId}:
+    get:
+      tags:
+      - "[IPC]"
+      summary: CONNECTHUB 조회 API
+      description: CONNECTHUB 조회 API
+      operationId: GET_IPC_CONNECTHUB
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-ipc-vrf-vrfId424168005"
+              examples:
+                GET_IPC_CONNECTHUB:
+                  value: "{\"deviceIds\":[\"MD4A-E-CHUB-PE-2-12R10\",\"MD4A-E-CHUB-PE-1-12R11\"\
+                    ],\"vrfName\":\"TEST_VRF_001\",\"status\":\"COMPLETE\",\"interfaceType\"\
+                    :\"TEN_GIGABIT_ETHERNET\",\"interfacePort\":\"0/1/2\",\"vlanId\"\
+                    :3535,\"interfaceIps\":[{\"ipAddress\":\"10.10.1.2\",\"netmask\"\
+                    :\"255.255.255.248\"},{\"ipAddress\":\"10.10.1.3\",\"netmask\"\
+                    :\"255.255.255.248\"}],\"virtualIp\":\"10.10.1.1\",\"qosType\"\
+                    :\"DEDI\",\"qosBandwidth\":\"50Mbps\",\"routeInfo\":{\"routes\"\
+                    :[{\"destIpAddress\":\"172.16.1.0\",\"netmask\":\"255.255.255.0\"\
+                    },{\"destIpAddress\":\"172.16.2.0\",\"netmask\":\"255.255.255.0\"\
+                    }],\"nextHop\":\"10.10.1.4\"}}"
+    delete:
+      tags:
+      - "[IPC]"
+      summary: CONNECTHUB 삭제 API
+      description: ConnectHub 삭제 API
+      operationId: DELETE_IPC_CONNECTHUB
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/on-prem/vpn-internet/vrf:
+    post:
+      tags:
+      - "[VPN_INTERNET]"
+      summary: CONNECTHUB 생성 API
+      description: CONNECTHUB 생성 API
+      operationId: CREATE_VPN_INTERNET_CONNECTHUB
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-on-prem-vpn-internet-vrf-1524740415"
+            examples:
+              CREATE_VPN_INTERNET_CONNECTHUB:
+                value: "{\"deviceIds\":[\"MD4A-E-CHUB-PE-2-12R10\",\"MD4A-E-CHUB-PE-1-12R11\"\
+                  ],\"customerName\":\"TEST_VRF_001\",\"rdRt\":\"65001:21111\",\"\
+                  interfaceType\":\"TEN_GIGABIT_ETHERNET\",\"interfacePort\":\"0/1/2\"\
+                  ,\"vlanId\":3535,\"interfaceIps\":[{\"ipAddress\":\"10.10.1.2\"\
+                  ,\"netmask\":\"255.255.255.248\"},{\"ipAddress\":\"10.10.1.3\",\"\
+                  netmask\":\"255.255.255.248\"}],\"virtualIp\":\"10.10.1.1\",\"qosType\"\
+                  :\"DEDI\",\"qosBandwidth\":\"50Mbps\",\"routeInfo\":{\"routes\"\
+                  :[{\"destIpAddress\":\"172.16.1.0\",\"netmask\":\"255.255.255.0\"\
+                  },{\"destIpAddress\":\"172.16.2.0\",\"netmask\":\"255.255.255.0\"\
+                  }],\"nextHop\":\"10.10.1.4\"},\"isRedundancy\":false,\"vpnInterfacePort\"\
+                  :\"1/31\",\"vpnUpDeviceIds\":[\"NXOS01\"],\"vpnDownDeviceIds\":[\"\
+                  NXOS02\"]}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-on-prem-vpn-internet-vrf202620179"
+              examples:
+                CREATE_VPN_INTERNET_CONNECTHUB:
+                  value: "{\"vrfId\":\"VRF_15\"}"
+  /v1/epc/vrf/{vrfId}/qos:
+    put:
+      tags:
+      - "[EPC]"
+      summary: INTERFACE QOS 수정 API
+      description: INTERFACE QOS 수정 API
+      operationId: MODIFY_EPC_INTERFACE_QOS
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-ipc-vrf-vrfId-qos542016680"
+            examples:
+              MODIFY_EPC_INTERFACE_QOS:
+                value: "{\"qosType\":\"DEDI\",\"qosBandwidth\":\"50Mbps\"}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/epc/vrf/{vrfId}/routes:
+    post:
+      tags:
+      - "[EPC]"
+      summary: CONNECTHUB ROUTING 생성 API
+      description: CONNECTHUB ROUTING 생성 API
+      operationId: CREATE_EPC_ROUTING
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-ipc-vrf-vrfId-routes-1437872849"
+            examples:
+              CREATE_EPC_ROUTING:
+                value: "{\"routes\":[{\"destIpAddress\":\"172.16.1.0\",\"netmask\"\
+                  :\"255.255.255.0\"},{\"destIpAddress\":\"172.16.2.0\",\"netmask\"\
+                  :\"255.255.255.0\"}],\"nextHop\":\"10.10.1.4\"}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/ipc/vrf/{vrfId}/qos:
+    put:
+      tags:
+      - "[IPC]"
+      summary: INTERFACE QOS 수정 API
+      description: INTERFACE QOS 수정 API
+      operationId: MODIFY_IPC_INTERFACE_QOS
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-ipc-vrf-vrfId-qos542016680"
+            examples:
+              MODIFY_IPC_INTERFACE_QOS:
+                value: "{\"qosType\":\"DEDI\",\"qosBandwidth\":\"50Mbps\"}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/ipc/vrf/{vrfId}/routes:
+    post:
+      tags:
+      - "[IPC]"
+      summary: CONNECTHUB ROUTING 생성 API
+      description: CONNECTHUB ROUTING 생성 API
+      operationId: CREATE_IPC_ROUTING
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-ipc-vrf-vrfId-routes-1437872849"
+            examples:
+              CREATE_IPC_ROUTING:
+                value: "{\"routes\":[{\"destIpAddress\":\"172.16.1.0\",\"netmask\"\
+                  :\"255.255.255.0\"},{\"destIpAddress\":\"172.16.2.0\",\"netmask\"\
+                  :\"255.255.255.0\"}],\"nextHop\":\"10.10.1.4\"}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/on-prem/vpn-internet/vrf/{vrfId}:
+    get:
+      tags:
+      - "[VPN_INTERNET]"
+      summary: CONNECTHUB 조회 API
+      description: CONNECTHUB 조회 API
+      operationId: GET_VPN_INTERNET_CONNECTHUB
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-on-prem-vpn-internet-vrf-vrfId-990351979"
+              examples:
+                GET_VPN_INTERNET_CONNECTHUB:
+                  value: "{\"vrfId\":\"VRF_ID_13\",\"deviceIds\":[\"MD4A-E-CHUB-PE-2-12R10\"\
+                    ,\"MD4A-E-CHUB-PE-1-12R11\"],\"vrfName\":\"TEST_VRF_001\",\"rdRt\"\
+                    :\"65001:21111\",\"interfaceType\":\"TEN_GIGABIT_ETHERNET\",\"\
+                    interfacePort\":\"0/1/2\",\"vlanId\":3535,\"interfaceIps\":[{\"\
+                    ipAddress\":\"10.10.1.2\",\"netmask\":\"255.255.255.248\"},{\"\
+                    ipAddress\":\"10.10.1.3\",\"netmask\":\"255.255.255.248\"}],\"\
+                    virtualIp\":\"10.10.1.1\",\"qosType\":\"DEDI\",\"qosBandwidth\"\
+                    :\"50Mbps\",\"routeInfo\":{\"routes\":[{\"destIpAddress\":\"172.16.1.0\"\
+                    ,\"netmask\":\"255.255.255.0\"},{\"destIpAddress\":\"172.16.2.0\"\
+                    ,\"netmask\":\"255.255.255.0\"}],\"nextHop\":\"10.10.1.4\"},\"\
+                    isRedundancy\":false,\"vpnInterfacePort\":\"1/31\",\"vpnUpDeviceIds\"\
+                    :[\"NXOS01\"],\"vpnDownDeviceIds\":[\"NXOS02\"]}"
+    delete:
+      tags:
+      - "[VPN_INTERNET]"
+      summary: CONNECTHUB 삭제 API
+      description: ConnectHub 삭제 API
+      operationId: DELETE_VPN_INTERNET_CONNECTHUB
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/epc/vrf/{vrfId}/routes/bulk-delete:
+    post:
+      tags:
+      - "[EPC]"
+      summary: CONNECTHUB ROUTING 삭제 API
+      description: ConnectHub ROUTING 삭제 API
+      operationId: DELETE_EPC_ROUTING
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-ipc-vrf-vrfId-routes-bulk-delete58517384"
+            examples:
+              DELETE_EPC_ROUTING:
+                value: "{\"routes\":[{\"destIpAddress\":\"172.16.1.0\",\"netmask\"\
+                  :\"255.255.255.0\"},{\"destIpAddress\":\"172.16.2.0\",\"netmask\"\
+                  :\"255.255.255.0\"}]}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/ipc/vrf/{vrfId}/routes/bulk-delete:
+    post:
+      tags:
+      - "[IPC]"
+      summary: CONNECTHUB ROUTING 삭제 API
+      description: ConnectHub ROUTING 삭제 API
+      operationId: DELETE_IPC_ROUTING
+      parameters:
+      - name: vrfId
+        in: path
+        description: VRF ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1-ipc-vrf-vrfId-routes-bulk-delete58517384"
+            examples:
+              DELETE_IPC_ROUTING:
+                value: "{\"routes\":[{\"destIpAddress\":\"172.16.1.0\",\"netmask\"\
+                  :\"255.255.255.0\"},{\"destIpAddress\":\"172.16.2.0\",\"netmask\"\
+                  :\"255.255.255.0\"}]}"
+      responses:
+        "202":
+          description: "202"
+          headers:
+            Location:
+              description: "비동기 작업 상태 조회 URL (예: /v1/status/{UUID})"
+              schema:
+                type: string
+  /v1/on-prem/vpn-internet/ports/available/{deviceId}:
+    get:
+      tags:
+      - "[VPN_INTERNET]"
+      summary: 사용할 수 있는 포트 조회 API
+      description: 사용할 수 있는 포트 조회 API
+      operationId: GET_VPN_INTERNET_AVAILABLE_PORT
+      parameters:
+      - name: deviceId
+        in: path
+        description: Connect Hub 장비 Device Id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1-on-prem-vpn-internet-ports-available-deviceId-257060885"
+              examples:
+                GET_VPN_INTERNET_AVAILABLE_PORT:
+                  value: "{\"data\":[{\"id\":\"eth1/17\",\"type\":\"eth\",\"speed\"\
+                    :\"10G\",\"descr\":null},{\"id\":\"eth1/31\",\"type\":\"eth\"\
+                    ,\"speed\":\"10G\",\"descr\":\"empty\"}]}"
+components:
+  schemas:
+    v1-on-prem-vpn-internet-vrf202620179:
+      required:
+      - vrfId
+      type: object
+      properties:
+        vrfId:
+          type: string
+          description: 생성된 CONNECTHUB ID
+    v1-ipc-vrf-vrfId-routes-1437872849:
+      required:
+      - nextHop
+      - routes
+      type: object
+      properties:
+        nextHop:
+          type: string
+          description: nexthop 주소
+        routes:
+          type: array
+          description: 목적지 정보 List
+          items:
+            required:
+            - destIpAddress
+            - netmask
+            type: object
+            properties:
+              destIpAddress:
+                type: string
+                description: 목적지 IP 주소
+              netmask:
+                type: string
+                description: 목적지 주소에 대한 subnetmask
+    v1-on-prem-vpn-internet-ports-available-deviceId-257060885:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          description: 사용 가능한 포트 목록
+          items:
+            required:
+            - id
+            - speed
+            - type
+            type: object
+            properties:
+              descr:
+                type: string
+                description: 포트 설명(empty 또는 없으면 null)
+                nullable: true
+              id:
+                type: string
+                description: "포트 ID (예: eth1/17)"
+              type:
+                type: string
+                description: "포트 type (예: eth"
+              speed:
+                type: string
+                description: "포트 speed (예: 10G)"
+    v1-ipc-vrf-vrfId-qos542016680:
+      required:
+      - qosBandwidth
+      - qosType
+      type: object
+      properties:
+        qosBandwidth:
+          type: string
+          description: 대역폭
+        qosType:
+          type: string
+          description: "Enum: [ DEDI: Dedicated, SHARED: Shared ]"
+    v1-cgw-vrfId1430899457:
+      required:
+      - deviceIds
+      - interfaces
+      - nexthop
+      - rt
+      - vrfId
+      - vrfName
+      type: object
+      properties:
+        vrfId:
+          type: string
+          description: CGW vrf Id
+        interfaces:
+          type: array
+          description: interface 정보
+          items:
+            required:
+            - interfaceName
+            - interfaceType
+            - ipAddress
+            - netmask
+            type: object
+            properties:
+              interfaceType:
+                type: string
+                description: "Enum: [ FW: FW, VM: VM ]"
+              netmask:
+                type: string
+                description: Interface netmask
+              ipAddress:
+                type: string
+                description: Interface Real IP
+              interfaceName:
+                type: string
+                description: Interface Bundle-Ether
+        rt:
+          type: number
+          description: 스위치 RT Number
+        deviceIds:
+          type: array
+          description: 스위치 장비 ID
+          items:
+            type: string
+        nexthop:
+          type: string
+          description: StaticRoute Next hop IP
+        vrfName:
+          type: string
+          description: VRF 이름
+    v1-on-prem-vpn-internet-vrf-vrfId-990351979:
+      required:
+      - deviceIds
+      - interfaceIps
+      - interfacePort
+      - interfaceType
+      - isRedundancy
+      - qosBandwidth
+      - qosType
+      - rdRt
+      - virtualIp
+      - vlanId
+      - vpnDownDeviceIds
+      - vpnInterfacePort
+      - vpnUpDeviceIds
+      - vrfId
+      - vrfName
+      type: object
+      properties:
+        vpnInterfacePort:
+          type: string
+          description: vpn device interface port
+        interfaceIps:
+          type: array
+          description: Interface 주소 정보 List
+          items:
+            required:
+            - ipAddress
+            - netmask
+            type: object
+            properties:
+              netmask:
+                type: string
+                description: IP 주소에 대한 subnetmask
+              ipAddress:
+                type: string
+                description: IP 주소
+        rdRt:
+          type: string
+          description: Rd:Rt 값
+        deviceIds:
+          type: array
+          description: 스위치 장비 ID
+          items:
+            type: string
+        qosBandwidth:
+          type: string
+          description: 대역폭
+        vlanId:
+          type: number
+          description: VLAN ID
+        vpnDownDeviceIds:
+          type: array
+          description: VPN Down Switch 장비 ID 값
+          items:
+            type: string
+        qosType:
+          type: string
+          description: "Enum: [ DEDI: Dedicated, SHARED: Shared ]"
+        routeInfo:
+          required:
+          - nextHop
+          - routes
+          type: object
+          properties:
+            nextHop:
+              type: string
+              description: nexthop 주소
+            routes:
+              type: array
+              description: 목적지 정보 List
+              items:
+                required:
+                - destIpAddress
+                - netmask
+                type: object
+                properties:
+                  destIpAddress:
+                    type: string
+                    description: 목적지 IP 주소
+                  netmask:
+                    type: string
+                    description: 목적지 주소에 대한 subnetmask
+          description: (nullable) 목적지 정보
+        virtualIp:
+          type: string
+          description: VRRP IP
+        interfaceType:
+          type: string
+          description: "Enum: [ TEN_GIGABIT_ETHERNET: TenGigabitEthernet, GIGABIT_ETHERNET:\
+            \ GigabitEthernet, PORT_CHANNEL: Port-channel ]"
+        vrfId:
+          type: string
+          description: VRF ID
+        vpnUpDeviceIds:
+          type: array
+          description: VPN UP Switch 장비 ID 값
+          items:
+            type: string
+        isRedundancy:
+          type: boolean
+          description: 이중화 여부
+        interfacePort:
+          type: string
+          description: Interface Port 번호
+        vrfName:
+          type: string
+          description: VRF 명칭
+    v1-ipc-vrf-vrfId424168005:
+      required:
+      - deviceIds
+      - interfaceIps
+      - interfacePort
+      - interfaceType
+      - qosBandwidth
+      - qosType
+      - status
+      - virtualIp
+      - vlanId
+      - vrfName
+      type: object
+      properties:
+        interfaceIps:
+          type: array
+          description: Interface 주소 정보 List
+          items:
+            required:
+            - ipAddress
+            - netmask
+            type: object
+            properties:
+              netmask:
+                type: string
+                description: IP 주소에 대한 subnetask
+              ipAddress:
+                type: string
+                description: IP 주소
+        interfaceType:
+          type: string
+          description: "Enum: [ TEN_GIGABIT_ETHERNET: TenGigabitEthernet, GIGABIT_ETHERNET:\
+            \ GigabitEthernet, PORT_CHANNEL: Port-channel ]"
+        deviceIds:
+          type: array
+          description: 스위치 장비 ID
+          items:
+            type: string
+        qosBandwidth:
+          type: string
+          description: 대역폭
+        vlanId:
+          type: number
+          description: VLAN ID
+        qosType:
+          type: string
+          description: "Enum: [ DEDI: Dedicated, SHARED: Shared ]"
+        interfacePort:
+          type: string
+          description: Interface Port 번호
+        routeInfo:
+          required:
+          - nextHop
+          - routes
+          type: object
+          properties:
+            nextHop:
+              type: string
+              description: nexthop 주소
+            routes:
+              type: array
+              description: 목적지 정보 list
+              items:
+                required:
+                - destIpAddress
+                - netmask
+                type: object
+                properties:
+                  destIpAddress:
+                    type: string
+                    description: 목적지 IP 주소
+                  netmask:
+                    type: string
+                    description: 목적지 주소에 대한 subnetmask
+          description: (nullable) 목적지 정보
+        virtualIp:
+          type: string
+          description: VRRP IP
+        status:
+          type: string
+          description: "Enum: [ COMPLETE: 완료, UPDATING: 수정 중 ]"
+        vrfName:
+          type: string
+          description: VRF 명칭
+    v1-cgw871491489:
+      required:
+      - customerName
+      - deviceIds
+      - interfaces
+      - nexthop
+      - rt
+      - vlanId
+      - vrfDescription
+      type: object
+      properties:
+        interfaces:
+          type: array
+          description: interface 정보
+          items:
+            required:
+            - interfaceName
+            - interfaceType
+            - ipAddress
+            - netmask
+            type: object
+            properties:
+              interfaceType:
+                type: string
+                description: "Enum: [ FW: FW, VM: VM ]"
+              netmask:
+                type: string
+                description: Interface netmask
+              ipAddress:
+                type: string
+                description: Interface Real IP
+              interfaceName:
+                type: string
+                description: Interface Bundle-Ether
+        rt:
+          type: number
+          description: 스위치 RT Number
+        deviceIds:
+          type: array
+          description: 스위치 장비 ID
+          items:
+            type: string
+        vlanId:
+          type: number
+          description: 스위치 VLAN Number
+        vrfDescription:
+          type: string
+          description: VRF Description
+        nexthop:
+          type: string
+          description: StaticRoute Next hop IP
+        customerName:
+          type: string
+          description: Customer Name
+    v1-ipc-vrf-vrfId-routes-bulk-delete58517384:
+      required:
+      - routes
+      type: object
+      properties:
+        routes:
+          type: array
+          description: 목적지 정보 List
+          items:
+            required:
+            - destIpAddress
+            - netmask
+            type: object
+            properties:
+              destIpAddress:
+                type: string
+                description: 목적지 IP 주소
+              netmask:
+                type: string
+                description: 목적지 주소에 대한 subnetmask
+    v1-ipc-vrf2147366891:
+      required:
+      - customerName
+      - deviceIds
+      - interfaceIps
+      - interfacePort
+      - interfaceType
+      - qosBandwidth
+      - qosType
+      - virtualIp
+      - vlanId
+      type: object
+      properties:
+        interfaceIps:
+          type: array
+          description: Interface 주소 정보 List
+          items:
+            required:
+            - ipAddress
+            - netmask
+            type: object
+            properties:
+              netmask:
+                type: string
+                description: IP 주소에 대한 subnetmask
+              ipAddress:
+                type: string
+                description: IP 주소
+        interfaceType:
+          type: string
+          description: "Enum: [ TEN_GIGABIT_ETHERNET: TenGigabitEthernet, GIGABIT_ETHERNET:\
+            \ GigabitEthernet, PORT_CHANNEL: Port-channel ]"
+        deviceIds:
+          type: array
+          description: 스위치 장비 ID
+          items:
+            type: string
+        qosBandwidth:
+          type: string
+          description: 대역폭
+        vlanId:
+          type: number
+          description: VLAN ID
+        qosType:
+          type: string
+          description: "Enum: [ DEDI: Dedicated, SHARED: Shared ]"
+        interfacePort:
+          type: string
+          description: Interface Port 번호
+        routeInfo:
+          required:
+          - nextHop
+          - routes
+          type: object
+          properties:
+            nextHop:
+              type: string
+              description: nexthop 주소
+            routes:
+              type: array
+              description: 목적지 정보 List
+              items:
+                required:
+                - destIpAddress
+                - netmask
+                type: object
+                properties:
+                  destIpAddress:
+                    type: string
+                    description: 목적지 IP 주소
+                  netmask:
+                    type: string
+                    description: 목적지 주소에 대한 subnetmask
+          description: (nullable) 목적지 정보
+        customerName:
+          type: string
+          description: 고객 계정
+        virtualIp:
+          type: string
+          description: VRRP IP
+    v1-epc-vrf652634864:
+      required:
+      - customerName
+      - deviceIds
+      - interfaceIps
+      - interfacePort
+      - interfaceType
+      - qosBandwidth
+      - qosType
+      - rdRt
+      - virtualIp
+      - vlanId
+      type: object
+      properties:
+        interfaceIps:
+          type: array
+          description: Interface 주소 정보 List
+          items:
+            required:
+            - ipAddress
+            - netmask
+            type: object
+            properties:
+              netmask:
+                type: string
+                description: IP 주소에 대한 subnetmask
+              ipAddress:
+                type: string
+                description: IP 주소
+        interfaceType:
+          type: string
+          description: "Enum: [ TEN_GIGABIT_ETHERNET: TenGigabitEthernet, GIGABIT_ETHERNET:\
+            \ GigabitEthernet, PORT_CHANNEL: Port-channel ]"
+        rdRt:
+          type: string
+          description: Rd:Rt 값
+        deviceIds:
+          type: array
+          description: 스위치 장비 ID
+          items:
+            type: string
+        qosBandwidth:
+          type: string
+          description: 대역폭
+        vlanId:
+          type: number
+          description: VLAN ID
+        qosType:
+          type: string
+          description: "Enum: [ DEDI: Dedicated, SHARED: Shared ]"
+        interfacePort:
+          type: string
+          description: Interface Port 번호
+        routeInfo:
+          required:
+          - nextHop
+          - routes
+          type: object
+          properties:
+            nextHop:
+              type: string
+              description: nexthop 주소
+            routes:
+              type: array
+              description: 목적지 정보 List
+              items:
+                required:
+                - destIpAddress
+                - netmask
+                type: object
+                properties:
+                  destIpAddress:
+                    type: string
+                    description: 목적지 IP 주소
+                  netmask:
+                    type: string
+                    description: 목적지 주소에 대한 subnetmask
+          description: (nullable) 목적지 정보
+        customerName:
+          type: string
+          description: 고객 계정
+        virtualIp:
+          type: string
+          description: VRRP IP
+    v1-cgw1617930617:
+      required:
+      - vrfId
+      type: object
+      properties:
+        vrfId:
+          type: string
+          description: CGW Vrf ID
+    v1-ipc-vrf-317327774:
+      required:
+      - vrfId
+      type: object
+      properties:
+        vrfId:
+          type: string
+          description: 생성된 VRF ID
+    v1-epc-vrf-vrfId306422075:
+      required:
+      - deviceIds
+      - interfaceIps
+      - interfacePort
+      - interfaceType
+      - qosBandwidth
+      - qosType
+      - rdRt
+      - status
+      - virtualIp
+      - vlanId
+      - vrfName
+      type: object
+      properties:
+        interfaceIps:
+          type: array
+          description: Interface 주소 정보 List
+          items:
+            required:
+            - ipAddress
+            - netmask
+            type: object
+            properties:
+              netmask:
+                type: string
+                description: IP 주소에 대한 subnetmask
+              ipAddress:
+                type: string
+                description: IP 주소
+        interfaceType:
+          type: string
+          description: "Enum: [ TEN_GIGABIT_ETHERNET: TenGigabitEthernet, GIGABIT_ETHERNET:\
+            \ GigabitEthernet, PORT_CHANNEL: Port-channel ]"
+        rdRt:
+          type: string
+          description: Rd:Rt 값
+        deviceIds:
+          type: array
+          description: 스위치 장비 ID
+          items:
+            type: string
+        qosBandwidth:
+          type: string
+          description: 대역폭
+        vlanId:
+          type: number
+          description: VLAN ID
+        qosType:
+          type: string
+          description: "Enum: [ DEDI: Dedicated, SHARED: Shared ]"
+        interfacePort:
+          type: string
+          description: Interface Port 번호
+        routeInfo:
+          required:
+          - nextHop
+          - routes
+          type: object
+          properties:
+            nextHop:
+              type: string
+              description: nexthop 주소
+            routes:
+              type: array
+              description: 목적지 정보 List
+              items:
+                required:
+                - destIpAddress
+                - netmask
+                type: object
+                properties:
+                  destIpAddress:
+                    type: string
+                    description: 목적지 IP 주소
+                  netmask:
+                    type: string
+                    description: 목적지 주소에 대한 subnetmask
+          description: (nullable) 목적지 정보
+        virtualIp:
+          type: string
+          description: VRRP IP
+        status:
+          type: string
+          description: "Enum: [ COMPLETE: 완료, UPDATING: 수정 중 ]"
+        vrfName:
+          type: string
+          description: VRF 명칭
+    v1-status-UUID486549215:
+      type: object
+    v1-on-prem-vpn-internet-vrf-1524740415:
+      required:
+      - customerName
+      - deviceIds
+      - interfaceIps
+      - interfacePort
+      - interfaceType
+      - isRedundancy
+      - qosBandwidth
+      - qosType
+      - rdRt
+      - virtualIp
+      - vlanId
+      - vpnDownDeviceIds
+      - vpnInterfacePort
+      - vpnUpDeviceIds
+      type: object
+      properties:
+        vpnInterfacePort:
+          type: string
+          description: vpn device interface port
+        interfaceIps:
+          type: array
+          description: Interface 주소 정보 List
+          items:
+            required:
+            - ipAddress
+            - netmask
+            type: object
+            properties:
+              netmask:
+                type: string
+                description: IP 주소에 대한 subnetmask
+              ipAddress:
+                type: string
+                description: IP 주소
+        rdRt:
+          type: string
+          description: Rd:Rt 값
+        deviceIds:
+          type: array
+          description: 스위치 장비 ID
+          items:
+            type: string
+        qosBandwidth:
+          type: string
+          description: 대역폭
+        vlanId:
+          type: number
+          description: VLAN ID
+        vpnDownDeviceIds:
+          type: array
+          description: VPN Down Switch 장비 ID 값
+          items:
+            type: string
+        qosType:
+          type: string
+          description: "Enum: [ DEDI: Dedicated, SHARED: Shared ]"
+        routeInfo:
+          required:
+          - nextHop
+          - routes
+          type: object
+          properties:
+            nextHop:
+              type: string
+              description: nexthop 주소
+            routes:
+              type: array
+              description: 목적지 정보 List
+              items:
+                required:
+                - destIpAddress
+                - netmask
+                type: object
+                properties:
+                  destIpAddress:
+                    type: string
+                    description: 목적지 IP 주소
+                  netmask:
+                    type: string
+                    description: 목적지 주소에 대한 subnetmask
+          description: (nullable) 목적지 정보
+        customerName:
+          type: string
+          description: 고객 계정
+        virtualIp:
+          type: string
+          description: VRRP IP
+        interfaceType:
+          type: string
+          description: "Enum: [ TEN_GIGABIT_ETHERNET: TenGigabitEthernet, GIGABIT_ETHERNET:\
+            \ GigabitEthernet, PORT_CHANNEL: Port-channel ]"
+        vpnUpDeviceIds:
+          type: array
+          description: VPN UP Switch 장비 ID 값
+          items:
+            type: string
+        isRedundancy:
+          type: boolean
+          description: 이중화 여부
+        interfacePort:
+          type: string
+          description: Interface Port 번호
